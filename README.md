@@ -12,5 +12,6 @@ Students are expected to:
 Student Info
 =======================
 
-* Name: MyName
+* Name: Hoang Manh Truong
+* StudentID: M22.ICT.005
 
