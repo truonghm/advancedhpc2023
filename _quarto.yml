@@ -1,0 +1,32 @@
+project:
+  render:
+    - "labworks/**/*.ipynb"
+
+author: Hoang Manh Truong
+date: today
+format: 
+  pdf:
+    include-before-body: 
+      text: |
+        \pagenumbering{roman}
+    documentclass: report
+    classoption: a4paper
+    papersize: A4
+    number-sections: true
+    toc: false
+    fontsize: 10pt
+    mainfont: Latin Modern Roman
+    sansfont: Latin Modern Roman
+    geometry:
+      - top=25mm
+      - left=35mm
+      - right=20mm
+      - bottom=24mm
+    keep-tex: true
+highlight-style: github
+code-block-bg: "#aadce3"
+code-block-border-left: "#31BAE9"
+execute:
+  echo: true
+  warning: false
+  eval: true

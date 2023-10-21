@@ -13,3 +13,6 @@ env:
 env-reset:
 	rm -rf $(CONDA_ENV_PATH)
 	make env
+
+render:
+	quarto render --execute
