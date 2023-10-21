@@ -12,10 +12,14 @@ from numba import cuda
 print(numba.cuda.detect())
 
 # %% [markdown]
-# - Select the GPU and print its name and id:
+# - Select the GPU and print its attributes:
 
 # %%
 gpu = numba.cuda.select_device(0)
 
-print("GPU ID", gpu.id)
-print("GPU Name", gpu.name)
+print("GPU ID:", gpu.id)
+print("GPU Name:", gpu.name)
+print("GPU Multiprocessor count:", gpu.MULTIPROCESSOR_COUNT)
+print("GPU memory:", gpu.get_primary_context().get_memory_info())
+
+
