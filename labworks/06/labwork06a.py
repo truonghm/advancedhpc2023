@@ -11,15 +11,18 @@ start = time.time()
 
 
 @cuda.jit
-def grayscale_kernel_2d(src, dst):
+def binary_kernel(src, dst, threshold):
     x, y = cuda.grid(2)
     if x < src.shape[0] and y < src.shape[1]:
         g = np.float32((src[x, y, 0] + src[x, y, 1] + src[x, y, 2]) / 3)
-        dst[x, y, 0] = dst[x, y, 1] = dst[x, y, 2] = g
+        if g < threshold:
+            dst[x, y, 0] = dst[x, y, 1] = dst[x, y, 2] = 0
+        else:
+            dst[x, y, 0] = dst[x, y, 1] = dst[x, y, 2] = 1
 
 
-def to_grayscale_gpu_2d(
-    img, dir_to_save: str, block_size: int, kernel, show_result: bool = False
+def to_binary_gpu_2d(
+    img, dir_to_save: str, block_size: int, kernel, threshold, show_result: bool = False
 ):
     h, w, c = img.shape
     pixel_count = h * w
@@ -31,7 +34,7 @@ def to_grayscale_gpu_2d(
     devSrc = cuda.to_device(rgb)
     devDst = cuda.device_array((h, w, 3), dtype=np.float32)
 
-    kernel[grid_size, block_size](devSrc, devDst)
+    kernel[grid_size, block_size](devSrc, devDst, threshold)
 
     hostDst = devDst.copy_to_host()
     grayscale_img = hostDst.reshape(h, w, 3)
@@ -42,7 +45,7 @@ def to_grayscale_gpu_2d(
         plt.axis("off")
         plt.show()
     plt.imsave(
-        os.path.join(dir_to_save, f"grayscale_gpu_block_size_{block_size}.png"),
+        os.path.join(dir_to_save, f"binarization_gpu_block_size_{block_size}.png"),
         grayscale_img,
         cmap="gray",
     )
@@ -51,9 +54,10 @@ def to_grayscale_gpu_2d(
 
 if __name__ == "__main__":
     N_TRIALS = 10
+    threshold = 0.4
     print(f"Running each test {N_TRIALS} times")
     base_path = os.path.dirname(os.path.realpath(__file__))
-    img = imread(os.path.join(base_path, "original.png"))
+    img = imread(os.path.join(base_path, "grayscale_input.png"))
 
     block_sizes_to_test = [
         (2, 2),
@@ -69,8 +73,8 @@ if __name__ == "__main__":
         total_time = 0
         for i in range(N_TRIALS):
             start = time.time()
-            to_grayscale_gpu_2d(
-                img, base_path, block_size, grayscale_kernel_2d, show_result=False
+            to_binary_gpu_2d(
+                img, base_path, block_size, binary_kernel, threshold, show_result=False
             )
             end = time.time()
             total_time += end - start
@@ -87,4 +91,4 @@ if __name__ == "__main__":
         [i for i in range(len(time_results))], block_sizes_to_test[1:]
     )
     # plt.show()
-    fig.savefig(os.path.join(base_path, "block_size_vs_time.png"), bbox_inches="tight")
+    fig.savefig(os.path.join(base_path, "binarization_block_size_vs_time.png"), bbox_inches="tight")
