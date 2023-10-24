@@ -1,3 +1,4 @@
+import math
 from numba import cuda, float32
 import time
 import numpy as np
@@ -26,19 +27,22 @@ blur_kernel = blur_kernel / blur_kernel.sum()
 @cuda.jit
 def blur_kernel_2d(src, dst, kernel):
     x, y = cuda.grid(2)
-    if x < src.shape[1] and y < src.shape[0]:
+    if x < src.shape[0] and y < src.shape[1]:
         for c in range(3):
-            conv_sum = 0.0
+            conv_sum = 0
             for i in range(-3, 4):
                 for j in range(-3, 4):
                     if (
                         x + i >= 0
-                        and x + i < src.shape[1]
+                        and x + i < src.shape[0]
                         and y + j >= 0
-                        and y + j < src.shape[0]
+                        and y + j < src.shape[1]
                     ):
-                        conv_sum += src[y + j, x + i, c] * kernel[i + 3, j + 3]
-            dst[y, x, c] = conv_sum
+                        conv_sum += (
+                            src[x + i, y + j, c] * kernel[i + 3, j + 3]
+                        )
+            dst[x, y, c] = conv_sum
+
 
 
 def gaussian_blur_gpu_2d(
@@ -51,8 +55,8 @@ def gaussian_blur_gpu_2d(
 ):
     h, w, c = img.shape
     pixel_count = h * w
-    grid_size_x = (w + block_size[0] - 1) // block_size[0]
-    grid_size_y = (h + block_size[1] - 1) // block_size[1]
+    grid_size_x = math.ceil(h / block_size[0])
+    grid_size_y = math.ceil(w / block_size[1])
     grid_size = (grid_size_x, grid_size_y)
     rgb = np.ascontiguousarray(img[..., :3])
 
