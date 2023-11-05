@@ -1,0 +1,25 @@
+cpu_numpy,68.95322299003601,3,None
+cpu_numpy,71.47255873680115,5,None
+cpu_numpy,67.9381091594696,7,None
+cpu_numpy,68.20913362503052,9,None
+cpu_numpy,66.3683111667633,11,None
+cpu_numpy,69.18607783317566,13,None
+cpu_numpy,73.79527592658997,15,None
+cpu_numpy,77.44283103942871,17,None
+cpu_numpy,81.55176019668579,19,None
+cpu_pure_python,323.0526440143585,3,None
+cpu_pure_python,415.8451234567891,5,None
+cpu_pure_python,581.2769876543210,7,None
+cpu_pure_python,689.9371357913579,9,None
+gpu_non_shared,0.07802057266235352,3,"(2, 2)"
+gpu_non_shared,0.14157342910766602,5,"(2, 2)"
+gpu_non_shared,0.22989583015441895,7,"(2, 2)"
+gpu_non_shared,0.3607661724090576,9,"(2, 2)"
+gpu_non_shared,0.019103050231933594,3,"(4, 4)"
+gpu_non_shared,0.036170244216918945,5,"(4, 4)"
+gpu_non_shared,0.05981779098510742,7,"(4, 4)"
+gpu_non_shared,0.09313583374023438,9,"(4, 4)"
+gpu_non_shared,0.010099172592163086,3,"(8, 8)"
+gpu_non_shared,0.01961493492126465,5,"(8, 8)"
+gpu_non_shared,0.031119346618652344,7,"(8, 8)"
+gpu_non_shared,0.04799318313598633,9,"(8, 8)"

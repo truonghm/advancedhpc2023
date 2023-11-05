@@ -15,4 +15,4 @@ env-reset:
 	make env
 
 render:
-	quarto render --execute
+	quarto render
